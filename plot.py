@@ -23,7 +23,7 @@ dup = list(range(500, 3500, 500))
 for i, clf in enumerate(clfs):
     print(scores[:,i])
 
-    plt.plot(medfilt(scores[:,i],5), label=clf)
+    plt.plot(medfilt(scores[:,i],11), label=clf)
 plt.legend()
 plt.ylim(.45,1)
 plt.tight_layout()
