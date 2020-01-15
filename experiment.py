@@ -12,7 +12,7 @@ import numpy as np
 
 print("LOADED")
 # Configure
-n_components = 25
+n_components = 20
 clfs = {
     "SVC": SVC(),
     "PCASSE-Oracle": PCASSE(subspace_size=4, n_components=n_components),
@@ -21,19 +21,21 @@ clfs = {
     "PCASSE.3": PCASSEE(subspace_size=4, distribuant_treshold=0.3),
 }
 n_splits = 5
-repetitions = 1
+repetitions = 10
 
 print(clfs.keys())
 clf = None
+overall_scores = []
+
 # Gather dataset
-for n_features in range(500, 15000, 500):
+for n_features in range(500, 15500, 500):
     scores = np.zeros((len(clfs), n_splits, repetitions))
     for repetition, random_state in enumerate(range(repetitions)):
         X, y = make_classification(
-            n_samples=500,
+            n_samples=250,
             n_features=n_features,
             n_informative=n_components,
-            n_clusters_per_class=1,
+            n_clusters_per_class=2,
             n_redundant=0,
             random_state=42 + random_state,
         )
@@ -57,3 +59,8 @@ for n_features in range(500, 15000, 500):
         # "%.3f" % (mean_scores[0] - mean_scores[1]),
         # clf.n_components,
     )
+    overall_scores.append(mean_scores)
+
+overall_scores = np.array(overall_scores)
+print(overall_scores)
+np.save("results", overall_scores)
