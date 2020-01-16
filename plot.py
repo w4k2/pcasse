@@ -23,7 +23,7 @@ for n_samples in [100, 150, 200]:
     for i, clf in enumerate(clfs):
         print(scores[:, i])
 
-        plt.plot(medfilt(scores[:, i], 5), label=clf)
+        plt.plot(medfilt(scores[:, i], 3), label=clf)
     plt.legend()
     plt.ylim(0, 1)
     plt.title("%i training samples" % n_samples)
