@@ -1,5 +1,7 @@
 """
-Ustalona liczba komponentów.
+- Ustalona liczba cech informatywnych.
+- Różna liczba wzorców.
+- Wzrastająca liczba cech ogółem.
 """
 from PCASSE import PCASSE, PCASSEE, RS
 from sklearn.base import clone
@@ -12,12 +14,12 @@ import numpy as np
 
 n_splits = 5
 repetitions = 10
-max = 16000
+max = 30000
+n_components = 20
 
 for n_samples in [100, 150, 200]:
     print("LOADED %i" % n_samples)
     # Configure
-    n_components = 20
     clfs = {
         "SVC": SVC(),
         "RS": RS(),
