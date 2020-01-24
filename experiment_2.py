@@ -14,7 +14,7 @@ import numpy as np
 
 n_splits = 5
 repetitions = 10
-max = 1000
+max = 30000
 n_components = 20
 
 for n_samples in [100, 150, 200]:
@@ -33,8 +33,7 @@ for n_samples in [100, 150, 200]:
     overall_scores = []
 
     # Gather dataset
-    for n_features in range(200, 1100, 100):
-        print("%i features" % n_features)
+    for n_features in range(1000, max, 1000):
         scores = np.zeros((len(clfs), n_splits, repetitions))
         for repetition, random_state in enumerate(range(repetitions)):
             X, y = make_classification(
@@ -52,14 +51,7 @@ for n_samples in [100, 150, 200]:
                 # Iterate classifiers
                 for clf_idx, clf_n in enumerate(clfs):
                     clf = clone(clfs[clf_n]).fit(X[train], y[train])
-
-                    # print("A ", y[train], y[test])
-                    # print(X[test].shape)
-
                     y_pred = clf.predict(X[test])
-                    # print(y_pred.shape, y[test].shape)
-                    # print(y_pred, y[test])
-                    # exit()
                     score = accuracy_score(y[test], y_pred)
                     scores[clf_idx, split, repetition] = score
 
@@ -76,4 +68,4 @@ for n_samples in [100, 150, 200]:
 
     overall_scores = np.array(overall_scores)
     print(overall_scores)
-    np.save("results_%i-1" % n_samples, overall_scores)
+    np.save("results_%i-2" % n_samples, overall_scores)

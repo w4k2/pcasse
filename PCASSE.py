@@ -54,6 +54,12 @@ class PCASSEE(ClassifierMixin, BaseEstimator):
         # Z EVR
         evrd = np.add.accumulate(pca.explained_variance_ratio_)
         self.n_components = np.where(evrd > self.distribuant_treshold)[0][0]
+
+        if self.n_components == 0:
+            self.n_components = 1
+
+        # print(evrd)
+        # print("%i COMPONENTS" % self.n_components)
         components = components[: self.n_components, :]
 
         # Calculate subspace size

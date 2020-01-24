@@ -33,7 +33,7 @@ for n_samples in [100, 150, 200]:
     overall_scores = []
 
     # Gather dataset
-    for n_features in range(200, 1100, 100):
+    for n_features in range(n_components, 220, 20):
         print("%i features" % n_features)
         scores = np.zeros((len(clfs), n_splits, repetitions))
         for repetition, random_state in enumerate(range(repetitions)):
@@ -53,6 +53,8 @@ for n_samples in [100, 150, 200]:
                 for clf_idx, clf_n in enumerate(clfs):
                     clf = clone(clfs[clf_n]).fit(X[train], y[train])
 
+                    #print("CLF %i" % clf_idx, y[train].shape, X[train].shape)
+
                     # print("A ", y[train], y[test])
                     # print(X[test].shape)
 
@@ -60,6 +62,7 @@ for n_samples in [100, 150, 200]:
                     # print(y_pred.shape, y[test].shape)
                     # print(y_pred, y[test])
                     # exit()
+                    #print("PRED SHAPE", y_pred.shape)
                     score = accuracy_score(y[test], y_pred)
                     scores[clf_idx, split, repetition] = score
 
@@ -76,4 +79,4 @@ for n_samples in [100, 150, 200]:
 
     overall_scores = np.array(overall_scores)
     print(overall_scores)
-    np.save("results_%i-1" % n_samples, overall_scores)
+    np.save("results_%i-0" % n_samples, overall_scores)
