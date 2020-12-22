@@ -1,7 +1,9 @@
 """
-Ustalona liczba komponentów.
+- Ustalona liczba cech informatywnych.
+- Różna liczba wzorców.
+- Wzrastająca liczba cech ogółem.
 """
-from PCASSE import PCASSE, PCASSEE, APCASSEE, RS
+from PCASSE import PCASSE, PCASSEE, RS
 from sklearn.base import clone
 from sklearn.datasets import make_classification
 from sklearn.model_selection import StratifiedKFold
@@ -12,12 +14,12 @@ import numpy as np
 
 n_splits = 5
 repetitions = 10
-max = 16000
+max = 1000
+n_components = 20
 
 for n_samples in [100, 150, 200]:
     print("LOADED %i" % n_samples)
     # Configure
-    n_components = 20
     clfs = {
         "SVC": SVC(),
         "RS": RS(),
@@ -25,14 +27,14 @@ for n_samples in [100, 150, 200]:
         "PCASSE.1": PCASSEE(distribuant_treshold=0.1),
         "PCASSE.2": PCASSEE(distribuant_treshold=0.2),
         "PCASSE.3": PCASSEE(distribuant_treshold=0.3),
-        "MPCASSE": APCASSEE(distribuant_treshold=0.3),
     }
 
     print(clfs.keys())
     overall_scores = []
 
     # Gather dataset
-    for n_features in range(1000, max, 1000):
+    for n_features in range(n_components, 220, 20):
+        print("%i features" % n_features)
         scores = np.zeros((len(clfs), n_splits, repetitions))
         for repetition, random_state in enumerate(range(repetitions)):
             X, y = make_classification(
@@ -50,7 +52,17 @@ for n_samples in [100, 150, 200]:
                 # Iterate classifiers
                 for clf_idx, clf_n in enumerate(clfs):
                     clf = clone(clfs[clf_n]).fit(X[train], y[train])
+
+                    #print("CLF %i" % clf_idx, y[train].shape, X[train].shape)
+
+                    # print("A ", y[train], y[test])
+                    # print(X[test].shape)
+
                     y_pred = clf.predict(X[test])
+                    # print(y_pred.shape, y[test].shape)
+                    # print(y_pred, y[test])
+                    # exit()
+                    #print("PRED SHAPE", y_pred.shape)
                     score = accuracy_score(y[test], y_pred)
                     scores[clf_idx, split, repetition] = score
 
@@ -67,4 +79,4 @@ for n_samples in [100, 150, 200]:
 
     overall_scores = np.array(overall_scores)
     print(overall_scores)
-    np.save("results_%i" % n_samples, overall_scores)
+    np.save("results_%i-0" % n_samples, overall_scores)
