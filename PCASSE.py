@@ -41,13 +41,11 @@ class PCASSE(ClassifierMixin, BaseEstimator):
 
 
 class APCASSEE(ClassifierMixin, BaseEstimator):
-    def __init__(self, distribuant_treshold=0.1, subspace_size=4):
-        self.distribuant_treshold = distribuant_treshold
+    def __init__(self, subspace_size=4):
         self.subspace_size = subspace_size
 
     def fit(self, X, y, classes=None):
         # Calculate PCA components
-
         pca = PCA(svd_solver="full").fit(X)
         components = np.abs(pca.components_)
 
