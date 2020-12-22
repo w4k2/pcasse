@@ -1,7 +1,7 @@
 """
 Ustalona liczba komponentów.
 """
-from PCASSE import PCASSE, PCASSEE, RS
+from PCASSE import PCASSE, PCASSEE, APCASSEE, RS
 from sklearn.base import clone
 from sklearn.datasets import make_classification
 from sklearn.model_selection import StratifiedKFold
@@ -25,6 +25,7 @@ for n_samples in [100, 150, 200]:
         "PCASSE.1": PCASSEE(distribuant_treshold=0.1),
         "PCASSE.2": PCASSEE(distribuant_treshold=0.2),
         "PCASSE.3": PCASSEE(distribuant_treshold=0.3),
+        "MPCASSE": APCASSEE(distribuant_treshold=0.3),
     }
 
     print(clfs.keys())

@@ -40,6 +40,61 @@ class PCASSE(ClassifierMixin, BaseEstimator):
         ).astype(int)
 
 
+class APCASSEE(ClassifierMixin, BaseEstimator):
+    def __init__(self, distribuant_treshold=0.1, subspace_size=4):
+        self.distribuant_treshold = distribuant_treshold
+        self.subspace_size = subspace_size
+
+    def fit(self, X, y, classes=None):
+        # Calculate PCA components
+
+        pca = PCA(svd_solver="full").fit(X)
+        components = np.abs(pca.components_)
+
+        # Mariusz method
+        Q_row = np.percentile(components, 75, axis=0)
+        Q_col = np.percentile(components, 75, axis=1)
+
+        B_row = (components > Q_row[np.newaxis,:]).astype(int)
+        B_col = (components > Q_col[:,np.newaxis]).astype(int)
+
+        B = B_col * B_row
+
+        sigma_row = np.sum(B, axis=0)
+        sigma_col = np.sum(B,axis=1)
+
+        self.n_components = np.min([np.max(sigma_row), np.max(sigma_col)])
+        components = components[: self.n_components, :]
+
+        # Calculate subspace size
+        self.subspace_size = 4
+
+        # Gather ensemble
+        self.subspaces = np.array(
+            [np.argsort(-row)[: self.subspace_size] for row in components]
+        )
+
+        # Build ensemble
+        self.ensemble = [SVC().fit(X[:, subspace], y) for subspace in self.subspaces]
+
+        return self
+
+    def predict(self, X):
+        return (
+            np.mean(
+                np.array(
+                    [
+                        self.ensemble[i].decision_function(X[:, subspace])
+                        for i, subspace in enumerate(self.subspaces)
+                    ]
+                ),
+                axis=0,
+            )
+            > 0
+        ).astype(int)
+
+
+
 class PCASSEE(ClassifierMixin, BaseEstimator):
     def __init__(self, distribuant_treshold=0.1, subspace_size=4):
         self.distribuant_treshold = distribuant_treshold
@@ -50,6 +105,7 @@ class PCASSEE(ClassifierMixin, BaseEstimator):
 
         pca = PCA(svd_solver="full").fit(X)
         components = np.abs(pca.components_)
+
 
         # Z EVR
         evrd = np.add.accumulate(pca.explained_variance_ratio_)
