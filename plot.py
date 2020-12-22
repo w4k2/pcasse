@@ -5,7 +5,7 @@ from sklearn.svm import SVC
 from scipy.signal import medfilt
 from sklearn.preprocessing import StandardScaler
 
-methods = ["SVC", "RS", "ORACLE", "PCASSE.1", "PCASSE.2", "PCASSE.3"]
+methods = ["SVC", "RS", "ORACLE", "PCASSE.1", "PCASSE.2", "PCASSE.3", "MARIUSZ"]
 colors = [
     (0, 0, 0),
     (0, 0, 0.7),
@@ -13,9 +13,10 @@ colors = [
     (0.7, 0, 0),
     (0.7, 0, 0),
     (0.7, 0, 0),
+    (0, 0.7, 0)
 ]
-ls = ["-", "-", ":", "--", "-.", "-"]
-lw = 1, 1, 4, 1, 1, 1
+ls = ["-", "-", ":", "--", "-.", "-", "-"]
+lw = 1, 1, 4, 1, 1, 1, 1
 
 for experiment in [0, 1, 2]:
     for n_samples in [100, 150, 200]:
@@ -24,7 +25,12 @@ for experiment in [0, 1, 2]:
 
         scores = np.load("results_%i-%i.npy" % (n_samples, experiment))
 
+        print("AAA",scores.shape)
+
         for i, method in enumerate(methods):
+            if scores.shape[1] == 6:
+                if i == 6:
+                    break
 
             x = scores[:, i]
             from scipy.ndimage.filters import gaussian_filter1d
