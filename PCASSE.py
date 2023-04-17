@@ -65,7 +65,7 @@ class APCASSEE(ClassifierMixin, BaseEstimator):
         components = components[: self.n_components, :]
 
         # Calculate subspace size
-        self.subspace_size = 4
+        # self.subspace_size = 4
 
         # Gather ensemble
         self.subspaces = np.array(
@@ -117,7 +117,7 @@ class PCASSEE(ClassifierMixin, BaseEstimator):
         components = components[: self.n_components, :]
 
         # Calculate subspace size
-        self.subspace_size = 4
+        # self.subspace_size = 4
 
         # Gather ensemble
         self.subspaces = np.array(
@@ -150,10 +150,10 @@ class RS(ClassifierMixin, BaseEstimator):
         self.subspace_size = subspace_size
 
     def fit(self, X, y, classes=None):
-        # Calculate PCA components
+        # # Calculate PCA components
 
-        pca = PCA(svd_solver="full").fit(X)
-        components = np.abs(pca.components_)
+        # pca = PCA(svd_solver="full").fit(X)
+        # components = np.abs(pca.components_)
 
         # Gather ensemble
         self.subspaces = np.random.randint(
